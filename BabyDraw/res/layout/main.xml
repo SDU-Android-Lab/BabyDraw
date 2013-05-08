@@ -64,6 +64,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
         </ImageButton>
+        
+        <Button 
+            android:id="@+id/buttonVoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="yuyin">
+        </Button>
     </LinearLayout>
 
     <LinearLayout

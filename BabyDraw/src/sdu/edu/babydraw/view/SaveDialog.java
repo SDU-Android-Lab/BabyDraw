@@ -10,6 +10,7 @@ import sdu.edu.babydraw.interfaces.OnClickOkListener;
 import sdu.edu.babydraw.utils.FileNameOk;
 import sdu.edu.babydraw.utils.ImageButtonTools;
 import sdu.edu.babydraw.utils.SDCardFiles;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -115,6 +116,7 @@ public class SaveDialog extends Dialog implements
 		mEditText.setText(string);
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	private String getCurrentDateStr() {
 		Date mDate = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_hhmmss");

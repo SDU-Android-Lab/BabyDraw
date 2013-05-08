@@ -34,6 +34,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -57,10 +58,12 @@ import android.widget.RadioGroup;
  * 
  */
 public class Main extends Activity implements OnClickListener {
+	private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
 	// PaintView
 	private PaintView mPaintView = null;
 
 	// button 界面上的各个按钮
+	private Button voiceButton=null;
 	private ImageButton saveButton = null;
 	private ImageButton loadButton = null;
 	private ImageButton clearButton = null;
@@ -534,6 +537,7 @@ public class Main extends Activity implements OnClickListener {
 			ImageButtonTools.setButtonFocusChanged(imageButton);
 			imageButton.setOnClickListener(this);
 		}
+		voiceButton.setOnClickListener(this);
 	}
 
 	/**
@@ -559,6 +563,7 @@ public class Main extends Activity implements OnClickListener {
 	 * 找到所有的通过所有的button
 	 */
 	private void findButtonById() {
+		voiceButton = (Button)findViewById(R.id.buttonVoice);
 		saveButton = (ImageButton) findViewById(R.id.imageButtonSave);
 		loadButton = (ImageButton) findViewById(R.id.imageButtonLoadPicture);
 		clearButton = (ImageButton) findViewById(R.id.imageButtonClear);
@@ -609,6 +614,10 @@ public class Main extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.buttonVoice:
+			this.startVoiceRecognitionActivity();
+			break;
+		
 		case R.id.imageButtonSave:
 			onClickButtonSave();
 			break;
@@ -1087,6 +1096,25 @@ public class Main extends Activity implements OnClickListener {
 				}
 			}
 			break;
+			
+		case VOICE_RECOGNITION_REQUEST_CODE:
+			if(resultCode == RESULT_OK){
+				ArrayList<String> matches = data
+						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+				/*
+				 * mList.setAdapter(new ArrayAdapter<String>(this,
+				 * android.R.layout.simple_list_item_1, matches));
+				 */
+				for (int i = 0; i < matches.size(); i++) {
+					if (matches.get(i).equals("小狗")) {
+						System.out.println("true");
+					} else {
+						System.out.println("false");
+					}
+				}
+			}
+			break;
+			
 		default:
 			break;
 		}
@@ -1125,4 +1153,18 @@ public class Main extends Activity implements OnClickListener {
 		redoButton.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.cantredo));
 	}
+	
+	
+	/**
+	 * Fire an intent to start the speech recognition activity.
+	 */
+	private void startVoiceRecognitionActivity() {
+		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+		intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+				"Speech recognition demo");
+		startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
+	}
+	
 }
